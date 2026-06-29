@@ -1,0 +1,31 @@
+name: Roshambo Tests
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Run tests
+        run: |
+          echo "Running Roshambo tests..."
+
+          result=$(dotnet run -- Rock Scissors)
+          if [ "$result" != "Win" ]; then echo "Fail: Rock vs Scissors"; exit 1; fi
+
+          result=$(dotnet run -- Rock Paper)
+          if [ "$result" != "Lose" ]; then echo "Fail: Rock vs Paper"; exit 1; fi
+
+          result=$(dotnet run -- Rock Rock)
+          if [ "$result" != "Draw" ]; then echo "Fail: Rock vs Rock"; exit 1; fi
