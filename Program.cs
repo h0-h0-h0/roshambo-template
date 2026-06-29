@@ -12,12 +12,12 @@ class Program
 
     static string DecideWinner(string user, string computer)
     {
-        if (user == computer) return "Lose";
+        if (user == computer) return "Draw";
         if ((user == "Rock" && computer == "Scissors") ||
             (user == "Paper" && computer == "Rock") ||
             (user == "Scissors" && computer == "Paper"))
-            return "Draw";
+            return "Win";
 
-        return "Win";
+        return "Lose";
     }
 }
