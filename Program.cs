@@ -1,5 +1,5 @@
 using System;
-
+// Corrected DecideWinner logic
 class Program
 {
     static void Main(string[] args)
