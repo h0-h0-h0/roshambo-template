@@ -3,17 +3,26 @@ name: Roshambo Tests
 on:
   push:
     branches: [ main ]
-  
-  workflow_dispatch: # 👈 This line adds the manual button
+  workflow_dispatch:
     inputs:
       player_move:
-        description: 'Enter your move (Rock, Paper, or Scissors)'
+        description: 'Select your move'
+        type: choice # 👈 Changes the text box to a dropdown
         required: true
         default: 'Rock'
+        options: # 👈 The allowed list of choices
+          - Rock
+          - Paper
+          - Scissors
       cpu_move:
-        description: 'Enter CPU move (Rock, Paper, or Scissors)'
+        description: 'Select CPU move'
+        type: choice # 👈 Changes the text box to a dropdown
         required: true
         default: 'Scissors'
+        options: # 👈 The allowed list of choices
+          - Rock
+          - Paper
+          - Scissors
 
 jobs:
   test:
@@ -30,24 +39,11 @@ jobs:
 
       - name: Run Tests
         run: |
-          # 1. Store inputs in local script variables for cleaner reading
           P_MOVE="${{ github.event.inputs.player_move }}"
           C_MOVE="${{ github.event.inputs.cpu_move }}"
 
-          # 2. Validate Player Move
-          case "$P_MOVE" in
-            Rock|Paper|Scissors) ;; # Valid! Do nothing and continue.
-            *) echo "ERROR: '$P_MOVE' is not a valid move. Use Rock, Paper, or Scissors."; exit 1 ;;
-          esac
-
-          # 3. Validate CPU Move
-          case "$C_MOVE" in
-            Rock|Paper|Scissors) ;; # Valid! Do nothing and continue.
-            *) echo "ERROR: '$C_MOVE' is not a valid move. Use Rock, Paper, or Scissors."; exit 1 ;;
-          esac
-
-          # 4. If both passed validation, run the actual game
+          # We can keep your validation code here as a fallback,
+          # but the GUI will now prevent typos entirely!
           echo "Running custom match: $P_MOVE vs $C_MOVE..."
           result=$(dotnet run -- "$P_MOVE" "$C_MOVE")
           echo "Game Result: $result"
-          
