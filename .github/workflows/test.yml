@@ -7,19 +7,10 @@ on:
     inputs:
       player_move:
         description: 'Select your move'
-        type: choice # 👈 Changes the text box to a dropdown
+        type: choice
         required: true
         default: 'Rock'
-        options: # 👈 The allowed list of choices
-          - Rock
-          - Paper
-          - Scissors
-      cpu_move:
-        description: 'Select CPU move'
-        type: choice # 👈 Changes the text box to a dropdown
-        required: true
-        default: 'Scissors'
-        options: # 👈 The allowed list of choices
+        options:
           - Rock
           - Paper
           - Scissors
@@ -37,13 +28,21 @@ jobs:
         with:
           dotnet-version: 9.0.x
 
-      - name: Run Tests
+      - name: Run Tests 
         run: |
+          # 1. Grab the user's choice from the GUI dropdown
           P_MOVE="${{ github.event.inputs.player_move }}"
-          C_MOVE="${{ github.event.inputs.cpu_move }}"
 
-          # We can keep your validation code here as a fallback,
-          # but the GUI will now prevent typos entirely!
-          echo "Running custom match: $P_MOVE vs $C_MOVE..."
+          # 2. Define the available choices in a Bash array
+          MOVES=("Rock" "Paper" "Scissors")
+
+          # 3. Calculate a random index (0, 1, or 2)
+          RANDOM_INDEX=$(( RANDOM % 3 ))
+
+          # 4. Extract the random move from the array
+          C_MOVE=${MOVES[$RANDOM_INDEX]}
+
+          # 5. Execute the game
+          echo "Running custom match: $P_MOVE vs $C_MOVE (Randomised CPU)..."
           result=$(dotnet run -- "$P_MOVE" "$C_MOVE")
           echo "Game Result: $result"
