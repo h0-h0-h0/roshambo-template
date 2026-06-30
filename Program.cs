@@ -10,6 +10,7 @@ class Program
         Console.WriteLine(DecideWinner(user, computer));
     }
 
+    // Now corrected
     static string DecideWinner(string user, string computer)
     {
         if (user == computer) return "Draw";
