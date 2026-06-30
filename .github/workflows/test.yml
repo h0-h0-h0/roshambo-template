@@ -3,8 +3,8 @@ name: Roshambo Tests
 on:
   push:
     branches: [ main ]
-  # workflow_dispatch: # 👈 This line adds the manual button
-  workflow_dispatch:
+  
+  workflow_dispatch: # 👈 This line adds the manual button
     inputs:
       player_move:
         description: 'Enter your move (Rock, Paper, or Scissors)'
@@ -28,25 +28,26 @@ jobs:
         with:
           dotnet-version: 9.0.x
 
-      - name: Run Tests 
+      - name: Run Tests
         run: |
-              echo "Running custom match: ${{ github.event.inputs.player_move }} vs ${{ github.event.inputs.cpu_move }}..."
+          # 1. Store inputs in local script variables for cleaner reading
+          P_MOVE="${{ github.event.inputs.player_move }}"
+          C_MOVE="${{ github.event.inputs.cpu_move }}"
+
+          # 2. Validate Player Move
+          case "$P_MOVE" in
+            Rock|Paper|Scissors) ;; # Valid! Do nothing and continue.
+            *) echo "ERROR: '$P_MOVE' is not a valid move. Use Rock, Paper, or Scissors."; exit 1 ;;
+          esac
+
+          # 3. Validate CPU Move
+          case "$C_MOVE" in
+            Rock|Paper|Scissors) ;; # Valid! Do nothing and continue.
+            *) echo "ERROR: '$C_MOVE' is not a valid move. Use Rock, Paper, or Scissors."; exit 1 ;;
+          esac
+
+          # 4. If both passed validation, run the actual game
+          echo "Running custom match: $P_MOVE vs $C_MOVE..."
+          result=$(dotnet run -- "$P_MOVE" "$C_MOVE")
+          echo "Game Result: $result"
           
-              # Captures the output of your command into the result variable
-              result=$(dotnet run -- ${{ github.event.inputs.player_move }} ${{ github.event.inputs.cpu_move }})
-          
-              # Prints the result to the log screen
-              echo "Game Result: $result"
-
-      # - name: Run tests
-        # run: |
-          # echo "Running Roshambo tests..."
-
-          # result=$(dotnet run -- Rock Scissors)
-          # if [ "$result" != "Win" ]; then echo "Fail: Rock vs Scissors"; exit 1; fi
-
-          # result=$(dotnet run -- Rock Paper)
-          # if [ "$result" != "Lose" ]; then echo "Fail: Rock vs Paper"; exit 1; fi
-
-          # result=$(dotnet run -- Rock Rock)
-          # if [ "$result" != "Draw" ]; then echo "Fail: Rock vs Rock"; exit 1; fi
