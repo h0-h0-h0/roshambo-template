@@ -28,14 +28,15 @@ jobs:
         with:
           dotnet-version: 9.0.x
 
-          run: |
-            echo "Running custom match: ${{ github.event.inputs.player_move }} vs ${{ github.event.inputs.cpu_move }}..."
+      - name: Run Tests 
+        run: |
+              echo "Running custom match: ${{ github.event.inputs.player_move }} vs ${{ github.event.inputs.cpu_move }}..."
           
-            # Captures the output of your command into the result variable
-            result=$(dotnet run -- ${{ github.event.inputs.player_move }} ${{ github.event.inputs.cpu_move }})
+              # Captures the output of your command into the result variable
+              result=$(dotnet run -- ${{ github.event.inputs.player_move }} ${{ github.event.inputs.cpu_move }})
           
-            # Prints the result to the log screen
-            echo "Game Result: $result"
+              # Prints the result to the log screen
+              echo "Game Result: $result"
 
       # - name: Run tests
         # run: |
